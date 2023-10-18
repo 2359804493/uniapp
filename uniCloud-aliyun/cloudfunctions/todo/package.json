@@ -1,0 +1,7 @@
+{
+  "name": "getMusicUrl",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}
