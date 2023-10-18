@@ -19,7 +19,6 @@ page {
   margin: 0;
   background-color: orange;
   overflow-x: hidden;
-  overflow-y: hidden;
   width: 100%;
   height: 100%;
   position: relative;

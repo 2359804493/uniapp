@@ -1,21 +1,14 @@
 <template>
-  <unicloud-db
-    v-slot:default="{ data, loading, error, options }"
-    collection="user_data"
-    ref="udb"
-  >
-    <view v-if="error">{{ error.message }}</view>
-    <view v-else>
       <view class="content">
         <view class="tips">
           <text class="title">
-            浏览量:<text>{{ data[0].pageView }}</text>
+            浏览量:<text>{{pageView}}</text>
           </text>
           <text class="title">
-            报名人数:<text>{{ data[0].enrollment }}</text>
+            报名人数:<text>{{enrollment}}</text>
           </text>
           <text class="title">
-            分享:<text>{{ data[0].share }}</text>
+            分享:<text>{{share}}</text>
           </text>
         </view>
         <!-- 海报 -->
@@ -47,23 +40,28 @@
               mode="widthFix"
             ></image>
           </view>
+          <!-- 商品列表 -->
+          <goodList></goodList>
         </view>
-      </view>
-    </view>
-  </unicloud-db>
 </template>
 
 <script>
 import Scroll from '../../components/scroll/index.vue'
 import lffBarrage from '../../components/lff-barrage/lff-barrage.vue'
+import goodList from '../../components/goodList/index.vue'
 const innerAudioContext = uni.createInnerAudioContext()
 const todo = uniCloud.importObject('todo')
 const db = uniCloud.database()
 export default {
-  components: { Scroll, lffBarrage },
+  components: { Scroll, lffBarrage,goodList },
   data() {
     return {
-      title: 'Hello',
+      title:"",
+      price:0,
+      startTime:new Date(),
+      endTime:new Date(),
+      postImgUrl:"",
+      brandImgUrl:"",
       pageView: 0,
       enrollment: 0,
       share: 0,
@@ -74,6 +72,7 @@ export default {
     this.getMusicUrl()
     // this.colrdo()
     this.getData()
+    this.getDetail()
   },
   methods: {
     gotoOrderPage() {
@@ -91,12 +90,13 @@ export default {
       }
       this.musicShow = !this.musicShow
     },
+    //获取音乐
     async getMusicUrl() {
-      const res1 = await db.collection('music_data').get()
-      console.log('res1', res1)
       const res = await todo.getData('music_data')
-      console.log('res', res)
-      // this.initMusic(url)
+      if(res.code==1){
+        const url = res.data[0].url
+        this.initMusic(url)
+      }
     },
     initMusic(url) {
       innerAudioContext.autoplay = false
@@ -104,25 +104,33 @@ export default {
       innerAudioContext.src = url
       this.musicShow = false
     },
-    colrdo() {
-      //插入一条弹幕
-      this.$refs.lffBarrage.add({ item: '你好呀小伙子' })
+    async getData() {
+      const res = await todo.getData('total_data')
+      if(res.code==1){
+        const { pageView=0, enrollment=0, share=0 } = res?.data[0]
+        console.log()
+        this.pageView = pageView
+        this.enrollment = enrollment
+        this.share = share
+      }
     },
-    //数据库增
-    addPageView() {
-      const db = uniCloud.database()
-      db.collection('scroll_data')
-        .add({
-          name: 'hhhhhhhhhhhhy',
-          number: 34,
-          imgUrl: '',
-          statu: 0,
-          time: '2023/10/05',
-        })
-        .then((res) => {
-          console.log('e', res)
-        })
+     async getDetail() {
+      const res = await todo.getData('activity_data')
+      if(res.code==1){
+        const { title,price,startTime,endTime,postImgUrl,brandImgUrl } = res?.data[0]
+        console.log("title,price,startTime,endTime,postImgUrl,brandImgUrl ",title,price,startTime,endTime,postImgUrl,brandImgUrl )
+        this.title = title
+        this.price = price
+        this.startTime = startTime
+        this.endTime = endTime
+        this.postImgUrl = postImgUrl
+        this.brandImgUrl = brandImgUrl
+      }
     },
+    // colrdo() {
+    //   //插入一条弹幕
+    //   this.$refs.lffBarrage.add({ item: '你好呀小伙子' })
+    // },
     //数据库删
     deletePageView() {
       this.$refs.udb.remove('652e3215bd0220d7633405d0')
@@ -143,12 +151,6 @@ export default {
           console.log('e', res)
         })
     },
-    async getData() {
-      const db = uniCloud.database()
-      let res = await db.collection('user_data').get()
-      const { pageView, enrollment, share } = res?.result?.data[0]
-      console.log('pageView,enrollment,share', pageView, enrollment, share)
-    },
   },
 }
 </script>
@@ -167,11 +169,12 @@ export default {
   color: white;
   height: 30rpx;
   line-height: 30rpx;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   font-size: 20rpx;
+  z-index: 999;
 }
 .contentTex {
   margin-top: 50rpx;
@@ -179,7 +182,7 @@ export default {
   padding: 20rpx;
 }
 .order {
-  position: absolute;
+  position: fixed;
   top: 45%;
   right: 0;
   background-color: blue;
@@ -194,14 +197,14 @@ export default {
   height: 500rpx;
   overflow: hidden;
   text-align: center;
-  animation: scale 3s alternate-reverse infinite;
+  animation: scale 1s alternate-reverse infinite;
 }
 .postImg img {
   height: 500rpx;
   width: 100%;
 }
 .bj_music {
-  position: absolute;
+  position: fixed;
   top: 10%;
   left: 30rpx;
 }

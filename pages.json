@@ -15,7 +15,21 @@
 				}
 				
 		}
-    ],
+    ,{
+    "path": "uni_modules/uni-pay/pages/success/success",
+    "style": {
+        "backgroundColor": "#F8F8F8",
+        "navigationBarTitleText": "支付成功"
+    }
+}
+,{
+    "path": "uni_modules/uni-pay/pages/ad-interactive-webview/ad-interactive-webview",
+    "style": {
+        "backgroundColor": "#F8F8F8",
+        "navigationBarTitleText": "ad"
+    }
+}
+],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
