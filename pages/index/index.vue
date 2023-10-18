@@ -58,8 +58,7 @@ import Scroll from '../../components/scroll/index.vue'
 import lffBarrage from '../../components/lff-barrage/lff-barrage.vue'
 const innerAudioContext = uni.createInnerAudioContext()
 const todo = uniCloud.importObject('todo')
-console.log("todo",todo.getUrl())
-const db = uniCloud.database();
+const db = uniCloud.database()
 export default {
   components: { Scroll, lffBarrage },
   data() {
@@ -74,7 +73,7 @@ export default {
   onLoad() {
     this.getMusicUrl()
     // this.colrdo()
-	this.getData()
+    this.getData()
   },
   methods: {
     gotoOrderPage() {
@@ -93,9 +92,10 @@ export default {
       this.musicShow = !this.musicShow
     },
     async getMusicUrl() {
-		const res1= await db.collection("music_data").get()
-      const res =  todo
-      console.log("res",res,res1)
+      const res1 = await db.collection('music_data').get()
+      console.log('res1', res1)
+      const res = await todo.getData('music_data')
+      console.log('res', res)
       // this.initMusic(url)
     },
     initMusic(url) {
@@ -125,13 +125,13 @@ export default {
     },
     //数据库删
     deletePageView() {
-     this.$refs.udb.remove("652e3215bd0220d7633405d0")
+      this.$refs.udb.remove('652e3215bd0220d7633405d0')
     },
     //数据库改
     updataPageView() {
       const db = uniCloud.database()
       db.collection('scroll_data')
-	  .doc("652e3215bd0220d7633405d0")
+        .doc('652e3215bd0220d7633405d0')
         .update({
           name: '22222222222222',
           number: 34,
@@ -143,12 +143,12 @@ export default {
           console.log('e', res)
         })
     },
-	async getData(){
-		const db = uniCloud.database();
-		let res = await db.collection('user_data').get()
-		const {pageView,enrollment,share} = res?.result?.data[0]
-		console.log("pageView,enrollment,share",pageView,enrollment,share)
-	}
+    async getData() {
+      const db = uniCloud.database()
+      let res = await db.collection('user_data').get()
+      const { pageView, enrollment, share } = res?.result?.data[0]
+      console.log('pageView,enrollment,share', pageView, enrollment, share)
+    },
   },
 }
 </script>

@@ -8,38 +8,47 @@ module.exports = {
 	//增加表数据
 	async add(dataSheetName,param){
 		let res = await db.collection(dataSheetName).add(param)
-		const data = res?.result
-		return data
+		try{
+			return Promise.resolve({...res,code:1,message:"请求成功"}) 
+		}catch(e){
+			return Promise.reject({code:0,message:"请求失败"})
+		}
 	},
 	//更新表中一条数据
 	async updata(dataSheetName,param,id){
 		let res = await db.collection(dataSheetName).doc(id).update(param)
-		const data = res?.result
-		return data  
+		try{
+			return Promise.resolve({...res,code:1,message:"请求成功"}) 
+		}catch(e){
+			return Promise.reject({code:0,message:"请求失败"})
+		}
 	},
 	//获取表数据
 	async getData(dataSheetName){
 		let res = await db.collection(dataSheetName).get()
-		const data = res?.result
-		console.log("res",res)
-		return data
+		try{
+			return Promise.resolve({...res,code:1,message:"请求成功"}) 
+		}catch(e){
+			return Promise.reject({code:0,message:"请求失败"})
+		}
+		
 	},
 	//获取筛选数据
 	async getAppointData(dataSheetName,param){
 		let res =  await db.collection(dataSheetName).where(param).get()
-		const data = res?.result
-		return data
+		try{
+			return Promise.resolve({...res,code:1,message:"请求成功"}) 
+		}catch(e){
+			return Promise.reject({code:0,message:"请求失败"})
+		}
 	},
 	//获取筛选数据数量
 	async getAppointData(dataSheetName,param){
 		let res = await db.collection(dataSheetName).where(param).count()
-		const data = res?.result
-		return data
-	},
-	getUrl(){
-		return{
-			url:"1111111"
+		try{
+			return Promise.resolve({...res,code:1,message:"请求成功"}) 
+		}catch(e){
+			return Promise.reject({code:0,message:"请求失败"})
 		}
-	}
-	
-},
+	},
+}
